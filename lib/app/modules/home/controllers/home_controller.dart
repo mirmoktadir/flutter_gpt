@@ -5,19 +5,18 @@ import 'package:getx_standard/app/service/dio_client.dart';
 import 'package:flutter/material.dart';
 
 class HomeController extends GetxController with BaseController {
-  String apiKey = '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';
+  String apiKey = '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';
   final sendMessageKey = GlobalKey<FormState>();
+  var botMessage = "";
   sendMessage(String? message) async {
     var request = {
       "model": "text-davinci-003",
-      "prompt": "$message",
-      "max_tokens": 7,
-      "temperature": 0,
-      "top_p": 1,
-      "n": 1,
-      "stream": false,
-      "logprobs": null,
-      "stop": [" Human:", " AI:"]
+      "prompt": message,
+      'temperature': 0,
+      'max_tokens': 2000,
+      'top_p': 1,
+      'frequency_penalty': 0.0,
+      'presence_penalty': 0.0,
     };
     var header = {
       'Content-Type': 'application/json',
@@ -33,7 +32,8 @@ class HomeController extends GetxController with BaseController {
         .catchError(handleError);
     if (response == null) return;
     sendMessageKey.currentState!.save();
-    print(response["choices"][0]["text"]);
+    botMessage = response["choices"][0]["text"];
+    // print(response["choices"][0]["text"]);
     hideLoading();
   }
 }
