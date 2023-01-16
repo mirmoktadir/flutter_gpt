@@ -30,6 +30,7 @@ dependencies:
   http: ^0.13.5
   file_picker: ^5.2.2
   lottie: ^2.0.0
+  chat_gpt_sdk: ^1.0.2+1
 
 dev_dependencies:
   flutter_test:

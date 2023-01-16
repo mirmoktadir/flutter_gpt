@@ -2,56 +2,120 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
-import '../../../../config/theme/my_fonts.dart';
-import '../../../components/empty_widget.dart';
+import 'package:iconly/iconly.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
-  const HomeView({Key? key}) : super(key: key);
-
+  HomeView({Key? key}) : super(key: key);
+  final TextEditingController textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All Posts'),
+        title: const Text('Flutter GPT'),
         centerTitle: true,
       ),
-      body: Obx(() => controller.postList.isEmpty
-          ? const EmptyWidget()
-          : Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: RawScrollbar(
-                thumbColor: theme.primaryColor,
-                radius: const Radius.circular(100),
-                thickness: 5,
-                interactive: true,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Expanded(
                 child: ListView.separated(
-                  itemCount: controller.postList.length,
-                  physics: const BouncingScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  separatorBuilder: (_, __) => SizedBox(
-                    height: 20.h,
-                  ),
-                  itemBuilder: (ctx, index) => Container(
-                    padding: const EdgeInsets.all(5),
-                    width: double.infinity,
-                    color: theme.canvasColor,
-                    child: Center(
-                      child: Text(
-                        controller.postList[index].title ?? "",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: MyFonts.headline6TextSize,
-                          fontWeight: FontWeight.w500,
-                          color: theme.primaryColor,
+                    reverse: true,
+                    physics: const BouncingScrollPhysics(),
+                    padding: EdgeInsets.only(bottom: 8.h),
+                    itemBuilder: (context, index) {
+                      return Container(
+                        height: 100,
+                        color: Colors.deepOrange,
+                      );
+                    },
+                    separatorBuilder: (context, _) {
+                      return SizedBox(height: 5.h);
+                    },
+                    itemCount: 10),
+              ),
+              Form(
+                key: controller.sendMessageKey,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    children: [
+                      //message box
+                      Expanded(
+                        child: SizedBox(
+                          height: 50.h,
+                          child: TextFormField(
+                            controller: textEditingController,
+                            textInputAction: TextInputAction.done,
+                            obscureText: false,
+                            onSaved: (value) {
+                              textEditingController.text = value!;
+                            },
+                            keyboardType: TextInputType.text,
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.only(
+                                top: 20,
+                                bottom: 20,
+                                left: 15,
+                              ),
+                              hintText: "send a message",
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(6.r),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: theme.primaryColor,
+                                ),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(6.r),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: theme.primaryColor,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(6.r),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: theme.primaryColor,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(6.r),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: theme.primaryColor,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      SizedBox(width: 8.w),
+                      // send button
+                      SizedBox(
+                          height: 50.h,
+                          child: ElevatedButton(
+                            style: theme.elevatedButtonTheme.style,
+                            onPressed: () async {
+                              await controller
+                                  .sendMessage(textEditingController.text);
+                              textEditingController.clear();
+                            },
+                            child: const Icon(IconlyLight.send),
+                          )),
+                    ],
                   ),
                 ),
               ),
-            )),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -16,17 +16,16 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // initialize local db (hive) and register our custom adapters
-  await MyHive.init(adapters: [UserModelAdapter()]);
+  // await MyHive.init(adapters: [UserModelAdapter()]);
 
   // init shared preference
   await MySharedPref.init();
 
   // inti fcm & notifications services (awesome notifications)
-  await FcmHelper.initFcm();
+  // await FcmHelper.initFcm();
 
   runApp(
     ScreenUtilInit(
-      // xd art board size
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
