@@ -23,9 +23,10 @@ class HomeView extends GetView<HomeController> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   // chat list
-                  chatSection(theme),
+                  Expanded(child: chatSection(theme)),
                   Form(
                     key: controller.sendMessageKey,
                     child: Padding(
@@ -51,27 +52,25 @@ class HomeView extends GetView<HomeController> {
 
   /// chat list
   Widget chatSection(ThemeData theme) {
-    return Expanded(
-      child: ListView.separated(
-          reverse: true,
-          shrinkWrap: true,
-          physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.only(bottom: 8.h),
-          itemBuilder: (context, index) {
-            return chatBox(theme, index, context);
-          },
-          separatorBuilder: (context, _) {
-            return SizedBox(height: 5.h);
-          },
-          itemCount: messages.length),
-    );
+    return ListView.separated(
+        reverse: false,
+        shrinkWrap: true,
+        physics: const BouncingScrollPhysics(),
+        padding: EdgeInsets.only(bottom: 8.h),
+        itemBuilder: (context, index) {
+          return chatBox(theme, index, context);
+        },
+        separatorBuilder: (context, _) {
+          return SizedBox(height: 5.h);
+        },
+        itemCount: messages.length);
   }
 
   Widget chatBox(ThemeData theme, int index, BuildContext context) {
     return Container(
       color: ChatMessageType == ChatMessageType.bot
           ? theme.primaryColor
-          : Colors.green,
+          : Colors.lightBlue,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -174,10 +173,11 @@ class HomeView extends GetView<HomeController> {
           style: theme.elevatedButtonTheme.style,
           onPressed: () async {
             await controller.sendMessage(textEditingController.text);
-            textEditingController.clear();
+
             messages.add(ChatMessage(
                 text: textEditingController.text,
                 chatMessageType: ChatMessageType.user));
+            textEditingController.clear();
             messages.add(ChatMessage(
                 text: controller.botMessage,
                 chatMessageType: ChatMessageType.bot));

@@ -5,7 +5,7 @@ import 'package:getx_standard/app/service/dio_client.dart';
 import 'package:flutter/material.dart';
 
 class HomeController extends GetxController with BaseController {
-  String apiKey = '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';
+  final String apiKey = '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';
   final sendMessageKey = GlobalKey<FormState>();
   var botMessage = "";
   sendMessage(String? message) async {
@@ -22,7 +22,7 @@ class HomeController extends GetxController with BaseController {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $apiKey',
     };
-    showLoading();
+
     var response = await DioClient()
         .post(
           url: ApiUrl.baseUrl,
@@ -33,7 +33,5 @@ class HomeController extends GetxController with BaseController {
     if (response == null) return;
     sendMessageKey.currentState!.save();
     botMessage = response["choices"][0]["text"];
-    // print(response["choices"][0]["text"]);
-    hideLoading();
   }
 }
